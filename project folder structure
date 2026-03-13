@@ -1,0 +1,29 @@
+/air-balloon-ride-system
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── db.js
+│   │   ├── controllers/
+│   │   │   ├── operatorController.js
+│   │   │   ├── balloonController.js
+│   │   │   ├── rideController.js
+│   │   │   └── ... (one per main entity + reports)
+│   │   ├── routes/
+│   │   │   ├── operatorRoutes.js
+│   │   │   ├── balloonRoutes.js
+│   │   │   └── index.js (or app routes)
+│   │   └── app.js
+│   ├── .env
+│   ├── package.json
+│   └── README.md (shared)
+├── frontend/
+│   ├── index.html          (main landing + dashboard)
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   └── assets/
+│       └── balloon-bg.jpg   (you need to download one)
+├── database/
+│   └── airballoon.sql      (full schema + data + queries)
+└── README.md

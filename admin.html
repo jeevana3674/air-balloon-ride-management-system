@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f7fb;
+}
+
+table{
+width:90%;
+margin:auto;
+border-collapse:collapse;
+background:white;
+margin-bottom:30px;
+}
+
+th{
+background:#3498db;
+color:white;
+padding:10px;
+}
+
+td{
+padding:8px;
+border-bottom:1px solid #ddd;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🛠 ADMIN DASHBOARD</h1>
+
+<h2>Ride Status</h2>
+
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Location</th>
+<th>Date</th>
+<th>Time</th>
+<th>Total Seats</th>
+<th>Booked Seats</th>
+<th>Available Seats</th>
+</tr>
+</thead>
+
+<tbody id="rideTable"></tbody>
+
+</table>
+
+<h2>🧑‍✈️ Pilot Availability</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Pilot Name</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="pilotTable"></tbody>
+
+</table>
+
+
+<h2>🛠 Maintenance Status</h2>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>Parachutes</td>
+<td>Available</td>
+</tr>
+
+<tr>
+<td>Gas Supply</td>
+<td>Available</td>
+</tr>
+
+</table>
+<h2>Final Booked Tickets</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>User Name</th>
+<th>Location</th>
+<th>Date</th>
+<th>Time</th>
+<th>Persons</th>
+</tr>
+</thead>
+
+<tbody id="ticketTable"></tbody>
+
+</table>
+
+
+<script>
+
+let rides = JSON.parse(localStorage.getItem("rides"));
+
+if(!rides){
+
+rides = [
+
+{ id:1, location:"Paris", date:"19-02-2026", time:"1 AM", total:20, booked:3 },
+{ id:2, location:"Vizag", date:"04-02-2026", time:"5 AM", total:20, booked:5 },
+{ id:3, location:"Bhimavaram", date:"13-02-2026", time:"10 AM", total:20, booked:2 },
+{ id:4, location:"Dubai", date:"20-02-2026", time:"6 AM", total:20, booked:4 },
+{ id:5, location:"London", date:"21-02-2026", time:"7 AM", total:20, booked:6 },
+{ id:6, location:"NewYork", date:"22-02-2026", time:"8 AM", total:20, booked:2 },
+{ id:7, location:"Tokyo", date:"23-02-2026", time:"9 AM", total:20, booked:3 },
+{ id:8, location:"Singapore", date:"24-02-2026", time:"10 AM", total:20, booked:1 },
+{ id:9, location:"Rome", date:"25-02-2026", time:"11 AM", total:20, booked:4 },
+{ id:10, location:"Sydney", date:"26-02-2026", time:"12 PM", total:20, booked:2 },
+{ id:11, location:"Canada", date:"10-04-2026", time:"3 PM", total:20, booked:0 },
+{ id:12, location:"Germany", date:"15-04-2026", time:"4 PM", total:20, booked:0 },
+{ id:13, location:"Southafrica", date:"25-05-2026", time:"12 PM", total:20, booked:0 }
+
+];
+
+localStorage.setItem("rides", JSON.stringify(rides));
+
+}
+
+let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+
+/* PILOT DATA */
+
+let pilots = [
+
+{name:"John",status:"Available"},
+{name:"David",status:"Available"},
+{name:"Ramesh",status:"On Leave"},
+{name:"Arjun",status:"Available"},
+{name:"Rahul",status:"Available"},
+{name:"Kiran",status:"On Leave"},
+{name:"Daniel",status:"Available"},
+{name:"Chris",status:"Available"},
+{name:"Mahesh",status:"On Leave"},
+{name:"Robert",status:"Available"}
+
+];
+
+function loadPilots(){
+
+const table = document.getElementById("pilotTable");
+
+table.innerHTML = "";
+
+pilots.forEach(p => {
+
+table.innerHTML += `
+<tr>
+<td>${p.name}</td>
+<td>${p.status}</td>
+</tr>
+`;
+
+});
+
+}
+
+/* ADMIN RIDE DATA */
+
+function loadAdmin(){
+
+const rideTable = document.getElementById("rideTable");
+
+rideTable.innerHTML = "";
+
+rides.forEach(r => {
+
+let available = r.total - r.booked;
+
+rideTable.innerHTML += `
+<tr>
+<td>${r.id}</td>
+<td>${r.location}</td>
+<td>${r.date}</td>
+<td>${r.time}</td>
+<td>${r.total}</td>
+<td>${r.booked}</td>
+<td>${available}</td>
+</tr>
+`;
+
+});
+
+
+const ticketTable = document.getElementById("ticketTable");
+
+ticketTable.innerHTML = "";
+
+tickets.forEach(t => {
+
+ticketTable.innerHTML += `
+<tr>
+<td>${t.names.join(", ")}</td>
+<td>${t.location}</td>
+<td>${t.date}</td>
+<td>${t.time}</td>
+<td>${t.persons}</td>
+</tr>
+`;
+
+});
+
+}
+
+loadAdmin();
+loadPilots();
+
+</script>
+
+</body>
+</html>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>User Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f7fb;
+}
+
+table{
+width:90%;
+margin:auto;
+border-collapse:collapse;
+background:white;
+}
+
+th{
+background:#3498db;
+color:white;
+padding:10px;
+}
+
+td{
+padding:8px;
+border-bottom:1px solid #ddd;
+}
+
+button{
+background:#3498db;
+color:white;
+border:none;
+padding:6px 12px;
+cursor:pointer;
+border-radius:5px;
+}
+
+#ticketBox{
+display:none;
+width:350px;
+margin:20px auto;
+padding:20px;
+background:white;
+box-shadow:0px 0px 10px gray;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🎈 USER DASHBOARD</h1>
+
+<h2>Available Rides</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Location</th>
+<th>Date</th>
+<th>Time</th>
+<th>Total Seats</th>
+<th>Booked Seats</th>
+<th>Available Seats</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="rideTable"></tbody>
+
+</table>
+
+
+<div id="ticketBox">
+
+<h3>🎟 Ticket Details</h3>
+
+<p><b>Name:</b> <span id="tName"></span></p>
+<p><b>Location:</b> <span id="tLocation"></span></p>
+<p><b>Date:</b> <span id="tDate"></span></p>
+<p><b>Time:</b> <span id="tTime"></span></p>
+<p><b>Persons:</b> <span id="tPersons"></span></p>
+
+</div>
+
+
+<script>
+
+/* load rides from storage */
+
+let rides = JSON.parse(localStorage.getItem("rides"));
+
+if(!rides){
+
+rides = [
+
+{ id:1, location:"Paris", date:"19-02-2026", time:"1 AM", total:20, booked:3 },
+{ id:2, location:"Vizag", date:"04-02-2026", time:"5 AM", total:20, booked:5 },
+{ id:3, location:"Bhimavaram", date:"13-02-2026", time:"10 AM", total:20, booked:2 },
+{ id:4, location:"Dubai", date:"20-02-2026", time:"6 AM", total:20, booked:4 },
+{ id:5, location:"London", date:"21-02-2026", time:"7 AM", total:20, booked:6 },
+{ id:6, location:"NewYork", date:"22-02-2026", time:"8 AM", total:20, booked:2 },
+{ id:7, location:"Tokyo", date:"23-02-2026", time:"9 AM", total:20, booked:3 },
+{ id:8, location:"Singapore", date:"24-02-2026", time:"10 AM", total:20, booked:1 },
+{ id:9, location:"Rome", date:"25-02-2026", time:"11 AM", total:20, booked:4 },
+{ id:10, location:"Sydney", date:"26-02-2026", time:"12 PM", total:20, booked:2 },
+{ id:11, location:"Canada", date:"10-04-2026", time:"3 PM", total:20, booked:0 },
+{ id:12, location:"Germany", date:"15-04-2026", time:"4 PM", total:20, booked:0 },
+{ id:13, location:"Southafrica", date:"25-05-2026", time:"12 PM", total:20, booked:0 }
+
+];
+
+localStorage.setItem("rides", JSON.stringify(rides));
+
+}
+
+let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+
+
+function loadRides(){
+
+const table=document.getElementById("rideTable");
+
+table.innerHTML="";
+
+rides.forEach(r=>{
+
+let available=r.total-r.booked;
+
+table.innerHTML+=`
+<tr>
+
+<td>${r.id}</td>
+<td>${r.location}</td>
+<td>${r.date}</td>
+<td>${r.time}</td>
+<td>${r.total}</td>
+<td>${r.booked}</td>
+<td>${available}</td>
+
+<td>
+<button onclick="bookRide(${r.id})">
+Book Ticket
+</button>
+</td>
+
+</tr>
+`;
+
+});
+
+}
+
+function bookRide(id){
+
+let persons = prompt("Enter Number of Persons");
+persons = parseInt(persons);
+
+if(!persons || persons<=0){
+alert("Invalid number of persons");
+return;
+}
+
+let rides = JSON.parse(localStorage.getItem("rides")) || [];
+let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+
+let ride = rides.find(r => r.id === id);
+
+if(!ride){
+alert("Ride not found");
+return;
+}
+
+let available = ride.total - ride.booked;
+
+if(persons > available){
+alert("Not enough seats available");
+return;
+}
+
+/* collect passenger names */
+
+let names = [];
+
+for(let i=1;i<=persons;i++){
+
+let pname = prompt("Enter Name for Person " + i);
+
+if(!pname){
+alert("Name required");
+return;
+}
+
+names.push(pname);
+
+}
+
+/* update booked seats */
+
+ride.booked += persons;
+
+localStorage.setItem("rides", JSON.stringify(rides));
+
+/* save ticket */
+
+tickets.push({
+names:names,
+location: ride.location,
+date: ride.date,
+time: ride.time,
+persons: persons
+});
+
+localStorage.setItem("tickets", JSON.stringify(tickets));
+
+/* show ticket popup */
+
+document.getElementById("ticketBox").style.display = "block";
+
+document.getElementById("tName").innerText = names.join(", ");
+document.getElementById("tLocation").innerText = ride.location;
+document.getElementById("tDate").innerText = ride.date;
+document.getElementById("tTime").innerText = ride.time;
+document.getElementById("tPersons").innerText = persons;
+
+/* popup message */
+
+alert("Ticket booked successfully");
+
+loadRides();
+
+}
+
+loadRides();
+
+</script>
+
+
+</body>
+</html>
